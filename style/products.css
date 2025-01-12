@@ -1,0 +1,346 @@
+@import url('https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Carlito';
+  font-weight: 700;
+  background-color: #c7c8ca;
+}
+
+.header {
+  position: sticky;
+  top: 0; /* Залишаємо header на верху */
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Щоб він був зверху */
+  transition: top 0.3s ease; /* Плавний ефект при зміні */
+}
+
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.logo-text {
+  font-weight: bold;
+  font-size: 24px;
+  text-shadow: 0.1em 0.1em 0.1em #918f8f;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  background-color: #008000;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  text-decoration: none; /* Відключаємо підкреслення посилання */
+  display: inline-block; /* Зробити як блок для кращого керування стилями */
+  text-align: center;
+  font-size: 14px;
+}
+
+.nav-button:hover {
+  opacity: 0.8;
+}
+
+.utility-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.utility-icons img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer; /* Зміна курсору при наведенні */
+  transition: opacity 0.2s ease-in-out; /* Плавний перехід */
+}
+
+.utility-icons img:hover {
+  opacity: 0.8; /* Напівпрозорість при наведенні */
+}
+
+.products-content {
+    max-width: 1170px;
+    margin: 30px auto;
+    padding: 40px 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+}
+
+.products-title {
+    font-size: 36px;
+    color: #4CAF50;
+    text-align: center;
+    margin-bottom: 40px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.product-category {
+    margin-bottom: 40px;
+}
+
+.category-title {
+    font-size: 24px;
+    color: #4CAF50;
+    margin-bottom: 15px;
+}
+
+.category-description {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.products-content h1,
+.products-content h2,
+.products-content p,
+.products-content ul {
+    padding-left: 30px; /* Ви можете змінити це значення за потребою */
+}
+
+/* Додаємо стиль для .features-list */
+.features-list {
+    list-style: none;
+    padding-left: 50px; /* Збільште це значення, щоб посунути весь список праворуч */
+}
+
+.features-list li {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px; /* Відступ для тексту від маркера */
+}
+
+.features-list li::before {
+    content: "•";
+    color: #4CAF50;
+    font-weight: bold;
+    position: absolute;
+    left: 0; /* Це розміщує маркер відносно елемента списку */
+}
+
+
+.footer {
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 30px;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+  }
+  
+  .footer-column h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .footer-column p {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .footer-column img {
+    width: 17px;
+    height: 17px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  
+  .footer-column {
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .footer-columns {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .footer-column-help h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .footer-column-help p {
+    font-size: 14px;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  
+  .footer-column-help p:hover {
+    opacity: 0.8;
+  }
+  
+  .footer-column-help {
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .footer-columns img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .footer-text {
+    font-weight: bold;
+    font-size: 24px;
+  }
+  
+  .copyright {
+    font-size: 14px;
+  }
+  
+  .payment-methods {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+  }
+  
+  .payment-methods img {
+    width: 40px;
+    height: 25px;
+  }
+
+
+@media (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .main-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .nav-menu {
+    order: 3;
+    width: 100%;
+    margin-top: 15px;
+    justify-content: space-between;
+  }
+  .nav-button {
+    flex-grow: 1;
+    text-align: center;
+  }
+  .main-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .product-card {
+    grid-template-columns: 1fr 2fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-card {
+    grid-template-columns: 1fr;
+  }
+  .product-image {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  .price-container {
+    text-align: left;
+  }
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-menu {
+    flex-wrap: wrap;
+  }
+  .nav-button {
+    width: calc(50% - 5px);
+    margin-bottom: 10px;
+  }
+  .utility-icons {
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 15px;
+  }
+  .product-purchase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .quantity-selector {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-text {
+    font-size: 20px;
+  }
+  .product-info h1 {
+    font-size: 18px;
+  }
+  .price {
+    font-size: 20px;
+  }
+  .footer-column h3 {
+    font-size: 16px;
+  }
+}
