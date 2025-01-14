@@ -7,7 +7,8 @@
     <link rel="shortcut icon" href="/images/AmsytechLogoImage.svg">
     <link rel="stylesheet" href="/style/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+    <script src="/js/config.js"></script>
+    <script src="/js/localStorage.js"></script>
 </head>
 <body>
     <header class="header">
@@ -379,30 +380,44 @@
     </footer>
 
     <script>
-        // Перевірка, чи користувач увійшов (для демонстрації)
-        const isUserLoggedIn = false; // Це може бути змінно в залежності від стану вашої сесії
-
-        const userIcon = document.getElementById('user-icon');
-        const userDropdown = document.getElementById('user-dropdown');
-
-        if (!isUserLoggedIn) {
-            // Якщо користувач не увійшов, при натисканні на іконку перенаправляти на сторінку логіну
-            userIcon.addEventListener('click', function() {
-                window.location.href = 'login.html';
-            });
-        } else {
-            // Якщо користувач увійшов, відображати мінівікно профілю
-            userIcon.addEventListener('click', function() {
-                userDropdown.classList.toggle('show');
-            });
-
-            // Закривати мінівікно, якщо клікаєш на будь-яке місце
-            window.addEventListener('click', function(event) {
-                if (!userDropdown.contains(event.target) && !userIcon.contains(event.target)) {
-                    userDropdown.classList.remove('show');
-                }
-            });
-        }
-    </script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const user = LocalStorage.getUser();
+          const userInfoDiv = document.getElementById('userInfo');
+          const logoutButton = document.getElementById('logoutButton');
+    
+          if (user && user.isLoggedIn) {
+            userInfoDiv.innerHTML = `
+              <p>Ви увійшли як: ${user.email}</p>
+              <p>Час входу: ${new Date(user.loginTime).toLocaleString()}</p>
+              <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>
+            `;
+            logoutButton.style.display = 'block';
+          } else {
+            window.location.href = '/login.html';
+          }
+    
+          logoutButton.addEventListener('click', async function() {
+            try {
+              const response = await fetch(`${CONFIG.API_URL}/users/logout`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: user.email }),
+              });
+    
+              if (response.ok) {
+                LocalStorage.removeUser();
+                alert('Ви успішно вийшли з системи');
+                window.location.href = '/login.html';
+              } else {
+                throw new Error('Помилка виходу');
+              }
+            } catch (error) {
+              alert('Помилка виходу: ' + error.message);
+            }
+          });
+        });
+      </script>
 </body>
 </html>

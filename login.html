@@ -1,60 +1,63 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вхід</title>
-    <link rel="stylesheet" href="/style/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вхід</title>
+  <script src="/js/config.js"></script>
+  <script src="/js/localStorage.js"></script>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Вхід</h1>
-        <form id="loginForm">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+  <h1>Вхід</h1>
+  <form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    <input type="submit" value="Увійти">
+    <p>Немає акаунта? <a href="register.html">Зареєструватися</a></p>
+  </form>
+  <div id="errorMessage" style="color: red;"></div>
 
-            <label for="password">Пароль</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Увійти</button>
-        </form>
-        <p>Немає акаунта? <a href="register.html">Зареєструватися</a></p>
-    </div>
-
-    <script>
-        // Отримуємо форму
-        const loginForm = document.getElementById('loginForm');
-
-        // Обробник події для форми
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Запобігаємо перезавантаженню сторінки
-
-            // Отримуємо значення полів
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // Відправляємо запит на сервер
-            fetch('http://localhost:3001/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'Успішно залогінено!') {
-                    alert('Логін успішний!');
-                    window.location.href = '/index.html'; // Перенаправлення на домашню сторінку після логіну
-                } else {
-                    alert(data.message); // Покажемо помилку
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Сталася помилка при логіні');
-            });
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMessageDiv = document.getElementById('errorMessage');
+      
+      try {
+        const response = await fetch(`${CONFIG.API_URL}/users/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
         });
-    </script>
+
+        const data = await response.json();
+        console.log('Відповідь сервера:', data);
+
+        if (response.ok) {
+          // Зберігаємо факт успішного входу
+          LocalStorage.setUser({ 
+            email: email,
+            isLoggedIn: true,
+            loginTime: new Date().toISOString(),
+            expiration: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+          });
+          alert(data.message || 'Вхід успішний!');
+          window.location.href = '/index.html';
+        } else {
+          throw new Error(data.message || 'Невірний email або пароль');
+        }
+      } catch (error) {
+        console.error('Деталі помилки:', error);
+        errorMessageDiv.textContent = `Помилка входу: ${error.message}`;
+      }
+    });
+  </script>
 </body>
 </html>
+
