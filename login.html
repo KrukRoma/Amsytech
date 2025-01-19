@@ -16,48 +16,42 @@
     <input type="password" id="password" name="password" required><br><br>
     <input type="submit" value="Увійти">
     <p>Немає акаунта? <a href="register.html">Зареєструватися</a></p>
+
   </form>
-  <div id="errorMessage" style="color: red;"></div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const errorMessageDiv = document.getElementById('errorMessage');
-      
-      try {
-        const response = await fetch(`${CONFIG.API_URL}/users/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-        });
 
-        const data = await response.json();
-        console.log('Відповідь сервера:', data);
+      // Відправляємо запит до сервера
+      fetch('http://localhost:3001/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Успішно залогінено!') {
+          // Зберігаємо дані користувача в LocalStorage
+          const user = { name: data.name, surname: data.surname, email: email };
+          LocalStorage.setUser(user);
 
-        if (response.ok) {
-          // Зберігаємо факт успішного входу
-          LocalStorage.setUser({ 
-            email: email,
-            isLoggedIn: true,
-            loginTime: new Date().toISOString(),
-            expiration: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-          });
-          alert(data.message || 'Вхід успішний!');
-          window.location.href = '/index.html';
+          alert('Логін успішний!');
+          window.location.href = '/index.html'; // Перенаправлення на домашню сторінку після логіну
         } else {
-          throw new Error(data.message || 'Невірний email або пароль');
+          alert(data.message); // Покажемо помилку
         }
-      } catch (error) {
-        console.error('Деталі помилки:', error);
-        errorMessageDiv.textContent = `Помилка входу: ${error.message}`;
-      }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Сталася помилка при логіні');
+      });
     });
   </script>
 </body>
 </html>
-

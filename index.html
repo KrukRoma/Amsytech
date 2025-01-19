@@ -385,37 +385,18 @@
           const userInfoDiv = document.getElementById('userInfo');
           const logoutButton = document.getElementById('logoutButton');
     
-          if (user && user.isLoggedIn) {
-            userInfoDiv.innerHTML = `
-              <p>Ви увійшли як: ${user.email}</p>
-              <p>Час входу: ${new Date(user.loginTime).toLocaleString()}</p>
-              <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>
-            `;
+          if (user) {
+            userInfoDiv.innerHTML = `<p>Вітаємо, ${user.name} ${user.surname}!</p>
+                                     <p>Email: ${user.email}</p>
+                                     <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>`;
             logoutButton.style.display = 'block';
           } else {
             window.location.href = '/login.html';
           }
     
-          logoutButton.addEventListener('click', async function() {
-            try {
-              const response = await fetch(`${CONFIG.API_URL}/users/logout`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: user.email }),
-              });
-    
-              if (response.ok) {
-                LocalStorage.removeUser();
-                alert('Ви успішно вийшли з системи');
-                window.location.href = '/login.html';
-              } else {
-                throw new Error('Помилка виходу');
-              }
-            } catch (error) {
-              alert('Помилка виходу: ' + error.message);
-            }
+          logoutButton.addEventListener('click', function() {
+            LocalStorage.removeUser();
+            window.location.href = '/login.html';
           });
         });
       </script>

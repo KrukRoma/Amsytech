@@ -22,36 +22,43 @@
   </form>
 
   <script>
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
       const name = document.getElementById('name').value;
       const surname = document.getElementById('surname').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      
-      try {
-        const response = await fetch(`${CONFIG.API_URL}/users/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name, surname, email, password }),
-        });
 
-        const data = await response.json();
+      // Зберігаємо користувача в LocalStorage
+      const user = { name, surname, email };
+      LocalStorage.setUser(user);
 
-        if (response.ok) {
-          alert('Реєстрація успішна!');
+      // Створюємо об'єкт для сервера
+      const userData = { name, surname, email, password };
+
+      // Відправляємо запит до сервера
+      fetch('http://localhost:3001/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Реєстрація успішна!') {
+          alert('Реєстрація пройшла успішно!');
           window.location.href = '/index.html';
         } else {
-          throw new Error(data.message || 'Помилка реєстрації');
+          alert(data.message || 'Помилка при реєстрації');
         }
-      } catch (error) {
-        alert('Помилка реєстрації: ' + error.message);
-      }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Сталася помилка при реєстрації');
+      });
     });
   </script>
 </body>
 </html>
-
