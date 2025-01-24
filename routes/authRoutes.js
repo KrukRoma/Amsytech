@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Невірний пароль' });
         }
 
-        res.status(200).json({ message: 'Успішно залогінено!' });
+        res.status(200).json({ message: 'Успішно залогінено!', email:user.email, name:user.name, surname:user.surname });
     } catch (error) {
         console.error('Помилка при логіні:', error);
         res.status(500).json({ message: 'Помилка серверу' });

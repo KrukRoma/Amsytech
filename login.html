@@ -37,8 +37,9 @@
       .then(response => response.json())
       .then(data => {
         if (data.message === 'Успішно залогінено!') {
+          
           // Зберігаємо дані користувача в LocalStorage
-          const user = { name: data.name, surname: data.surname, email: email };
+          const user = { name: data.name, surname: data.surname, email: data.email };
           LocalStorage.setUser(user);
 
           alert('Логін успішний!');

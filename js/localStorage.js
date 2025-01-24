@@ -33,4 +33,3 @@ const LocalStorage = {
     return user !== null;
   }
 };
-
