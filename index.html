@@ -32,8 +32,8 @@
                 <img src="images\5425129490188725190.jpg" alt="Language">
                 <img src="images\5425129490188725192.jpg" alt="Cart">
                 <a href="login.html" id="user-icon" class="user-icon">
-                    <img src="images/5425129490188725198.jpg" alt="User">
-                </a>            
+                    
+                </a>
             </div>
         </div>
     </header>
@@ -395,35 +395,37 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-          const user = LocalStorage.getUser();
-          const userInfoDiv = document.getElementById('userInfo');
-          const logoutButton = document.getElementById('logoutButton');
+            const user = LocalStorage.getUser();
+            const userInfoDiv = document.getElementById('userInfo');
+            const logoutButton = document.getElementById('logoutButton');
+            const userIcon = document.getElementById('user-icon');
     
-          if (user) {
-            userInfoDiv.innerHTML = `<p>Вітаємо, ${user.name} ${user.surname}!</p>
-                                     <p>Email: ${user.email}</p>
-                                     <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>`;
-            logoutButton.style.display = 'block';
-          } else {
-            window.location.href = '/login.html';
-          }
+            // Перевірка наявності користувача
+            if (user) {
+                userInfoDiv.innerHTML = `<p>Вітаємо, ${user.name} ${user.surname}!</p>
+                                         <p>Email: ${user.email}</p>
+                                         <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>`;
+                logoutButton.style.display = 'block';
+                // Якщо користувач увійшов, направляємо на account.html
+                userIcon.href = 'account.html';
+                userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`; // Перша буква імені користувача
+            } else {
+                window.location.href = '/login.html';
+                // Якщо не увійшов, залишаємо посилання на login.html
+                userIcon.href = 'login.html';
+                userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`; // Дефолтна аватарка
+            }
     
-          logoutButton.addEventListener('click', function() {
-            LocalStorage.removeUser();
-            window.location.href = '/login.html';
-          });
+            // Обробник для кнопки виходу
+            logoutButton.addEventListener('click', function() {
+                LocalStorage.removeUser();
+                window.location.href = '/index.html';  // Перенаправлення на головну сторінку після виходу
+            });
+    
+            // Робимо сторінку видимою після завантаження даних
+            document.body.classList.remove('hidden');
         });
-        
-        const userIcon = document.getElementById('user-icon');
-
-    // Перевіряємо, чи залогінений користувач
-    if (LocalStorage.isLoggedIn()) {
-      // Якщо користувач увійшов, направляємо на account.html
-      userIcon.href = 'account.html';
-    } else {
-      // Якщо не увійшов, залишаємо посилання на login.html
-      userIcon.href = 'login.html';
-    }
-      </script>
+    </script>
+    
 </body>
 </html>

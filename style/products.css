@@ -12,6 +12,10 @@ body {
   background-color: #c7c8ca;
 }
 
+body.hidden {
+  visibility: hidden; /* Ховаємо сторінку перед завантаженням */
+}
+
 .header {
   position: sticky;
   top: 0; /* Залишаємо header на верху */
@@ -22,7 +26,6 @@ body {
   transition: top 0.3s ease; /* Плавний ефект при зміні */
 }
 
-
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -30,6 +33,22 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.user-icon {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50%;
+  text-transform: uppercase;
+  text-align: center;  /* Додаємо, щоб буква була по центру */
+  text-decoration: none;
 }
 
 .logo {

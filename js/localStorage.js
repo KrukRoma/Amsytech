@@ -6,12 +6,11 @@ const LocalStorage = {
       email: user.email,
       expiration: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // Термін дії 7 днів
     };
-    localStorage.clear(); // Очищаємо весь localStorage
-    localStorage.setItem(CONFIG.AUTH_KEY, JSON.stringify(userData));
+    localStorage.setItem('amsytech_auth_user', JSON.stringify(userData)); // Використовуємо без CONFIG
   },
   
   getUser: () => {
-    const user = localStorage.getItem(CONFIG.AUTH_KEY);
+    const user = localStorage.getItem('amsytech_auth_user'); // Використовуємо без CONFIG
     if (user) {
       const userData = JSON.parse(user);
       if (new Date(userData.expiration) > new Date()) {
@@ -25,7 +24,7 @@ const LocalStorage = {
   },
   
   removeUser: () => {
-    localStorage.removeItem(CONFIG.AUTH_KEY);
+    localStorage.removeItem('amsytech_auth_user'); // Використовуємо без CONFIG
   },
   
   isLoggedIn: () => {
