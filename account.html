@@ -92,33 +92,33 @@
   <script>
     // Перевіряємо, чи користувач залогінений
     if (LocalStorage.isLoggedIn()) {
-      const user = LocalStorage.getUser();
+    const user = LocalStorage.getUser();
 
-      // Виводимо привітання з іменем користувача
-      const greetingMessage = `Привіт, ${user.name}!`;
-      document.getElementById('greetingMessage').textContent = greetingMessage;
+    // Виводимо привітання з іменем користувача
+    const greetingMessage = `Привіт, ${user.name}!`;
+    document.getElementById('greetingMessage').textContent = greetingMessage;
 
-      // Оновлюємо іконку користувача
-      const userIconContainer = document.getElementById('userIconContainer');
-      userIconContainer.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`; // Перша буква імені
+    // Оновлюємо іконку користувача
+    const userIconContainer = document.getElementById('userIconContainer');
+    userIconContainer.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`; // Перша буква імені
 
-      // Додаємо подію на кнопку для виходу з акаунту
-      document.getElementById('logoutButton').addEventListener('click', function() {
-        // Видаляємо дані користувача з LocalStorage
-        LocalStorage.removeUser();
-        alert('Ви вийшли з акаунту');
-        window.location.href = 'index.html';
-        
-        // Додаємо затримку перед перенаправленням на головну сторінку
-        setTimeout(function() {
-          window.location.href = 'index.html';  // Перенаправляємо на головну сторінку
-        }); // 100 мс затримки
-      });
-    } else {
-      // Якщо користувач не залогінений, перенаправляємо на сторінку логіну
-      alert('Ви не залогінені. Перенаправляємо на головну сторінку...');
-      window.location.href = 'index.html'; // Перенаправляємо на головну сторінку
-    }
+    // Додаємо подію на кнопку для виходу з акаунту
+    document.getElementById('logoutButton').addEventListener('click', function() {
+    // Видаляємо дані користувача
+    LocalStorage.removeUser(); 
+    
+    // Показуємо повідомлення
+    alert('Ви успішно вийшли з акаунту');
+    
+    // Перенаправляємо на головну сторінку
+    window.location.replace('index.html');
+});
+} else {
+    // Якщо користувач не залогінений, перенаправляємо на головну сторінку
+    alert('Ви не залогінені. Перенаправляємо на головну сторінку...');
+    window.location.href = 'index.html';
+}
+
   </script>
 </body>
 </html>

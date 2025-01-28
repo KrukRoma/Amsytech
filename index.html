@@ -395,36 +395,36 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const user = LocalStorage.getUser();
-            const userInfoDiv = document.getElementById('userInfo');
-            const logoutButton = document.getElementById('logoutButton');
-            const userIcon = document.getElementById('user-icon');
-    
-            // Перевірка наявності користувача
-            if (user) {
-                userInfoDiv.innerHTML = `<p>Вітаємо, ${user.name} ${user.surname}!</p>
-                                         <p>Email: ${user.email}</p>
-                                         <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>`;
-                logoutButton.style.display = 'block';
-                // Якщо користувач увійшов, направляємо на account.html
-                userIcon.href = 'account.html';
-                userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`; // Перша буква імені користувача
-            } else {
-                window.location.href = '/login.html';
-                // Якщо не увійшов, залишаємо посилання на login.html
-                userIcon.href = 'login.html';
-                userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`; // Дефолтна аватарка
-            }
-    
-            // Обробник для кнопки виходу
-            logoutButton.addEventListener('click', function() {
-                LocalStorage.removeUser();
-                window.location.href = '/index.html';  // Перенаправлення на головну сторінку після виходу
-            });
-    
-            // Робимо сторінку видимою після завантаження даних
-            document.body.classList.remove('hidden');
-        });
+    const user = LocalStorage.getUser();
+    const userInfoDiv = document.getElementById('userInfo');
+    const logoutButton = document.getElementById('logoutButton');
+    const userIcon = document.getElementById('user-icon');
+
+    // Перевірка наявності користувача в LocalStorage
+    if (user) {
+        // Якщо користувач є в LocalStorage, виводимо його інформацію
+        userInfoDiv.innerHTML = `<p>Вітаємо, ${user.name} ${user.surname}!</p>
+                                 <p>Email: ${user.email}</p>
+                                 <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>`;
+        logoutButton.style.display = 'block';
+        // Направляємо користувача на сторінку акаунта
+        userIcon.href = 'account.html';
+        userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`; // Перша буква імені користувача
+    } else {
+        // Якщо користувача немає, пропонуємо зайти
+        userInfoDiv.innerHTML = '<p>Ви не авторизовані. <a href="login.html">Увійти</a></p>';
+        logoutButton.style.display = 'none';
+        // Направляємо на сторінку логіну
+        userIcon.href = 'login.html';
+        userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`; // Дефолтна аватарка
+    }
+
+    // Затримка для видалення класу "hidden" після того, як всі дані завантажено
+    setTimeout(function() {
+        document.body.classList.remove('hidden');
+    }, 50); // Затримка в 300 мс для більш плавного завантаження
+});
+
     </script>
     
 </body>

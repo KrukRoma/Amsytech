@@ -12,6 +12,10 @@ body {
   background-color: #c7c8ca;
 }
 
+body.hidden {
+  visibility: hidden; /* Ховаємо сторінку перед завантаженням */
+}
+
 .header {
   position: sticky;
   top: 0; /* Залишаємо header на верху */
