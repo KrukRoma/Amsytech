@@ -1,22 +1,23 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const userRoutes = require('./routes/userRoutes'); // Маршрути для реєстрації
-const authRoutes = require('./routes/authRoutes'); // Маршрути для логіну
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
+const productRoutes = require('./routes/productRoutes');
+const path = require('path'); // Додано для роботи з шляхами
 
 const app = express();
 
-// Дозволяємо запити з інших доменів
 app.use(cors());
-
-// Для роботи з JSON
 app.use(bodyParser.json());
 
-// Підключення маршрутів
-app.use('/api/users', userRoutes); // Реєстрація користувачів
-app.use('/api/users', authRoutes); // Логін користувачів
+// Додаємо обслуговування фотографій
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Сервер слухає порт
+app.use('/api/users', userRoutes);
+app.use('/api/users', authRoutes);
+app.use('/api/products', productRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
