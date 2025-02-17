@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMSYTECH</title>
-    <link rel="shortcut icon" href="/images/AmsytechLogoImage.svg">
-    <link rel="stylesheet" href="/style/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="/js/config.js"></script>
+    <title>Кошик</title>
+    <link rel="stylesheet" href="style/cart.css">
+    <script src="js/cart.js"></script>
     <script src="/js/localStorage.js"></script>
-    <script src="/js/script.js"></script>
-    <script src="/js/products.js"></script>
-
 </head>
 <body>
     <header class="header">
@@ -39,14 +34,12 @@
         </div>
     </header>
 
-    <div class="main-container">
-        <div class="main-content">
-            <h1 class="page-title">AMSYTECH</h1>
-            <p class="page-subtitle">Наші роботи</p>
-        
-            <div id="product-list" class="grid-container"></div>
+    <main>
+        <h1>Ваш кошик</h1>
+        <div id="cart-container">
+            <p>Завантаження кошика...</p>
         </div>
-    </div>
+    </main>
 
     <footer class="footer">
         <div class="footer-container">
@@ -93,38 +86,21 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const user = LocalStorage.getUser();
-    const userInfoDiv = document.getElementById('userInfo');
-    const logoutButton = document.getElementById('logoutButton');
+        document.addEventListener('DOMContentLoaded', function () {
+    const user = JSON.parse(localStorage.getItem('amsytech_auth_user'));
     const userIcon = document.getElementById('user-icon');
 
-    // Перевірка наявності користувача в LocalStorage
-    if (user) {
-        // Якщо користувач є в LocalStorage, виводимо його інформацію
-        userInfoDiv.innerHTML = `<p>Вітаємо, ${user.name} ${user.surname}!</p>
-                                 <p>Email: ${user.email}</p>
-                                 <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>`;
-        logoutButton.style.display = 'block';
-        // Направляємо користувача на сторінку акаунта
-        userIcon.href = 'account.html';
-        userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`; // Перша буква імені користувача
+    if (user && user.name) {
+        userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`;
     } else {
-        // Якщо користувача немає, пропонуємо зайти
-        userInfoDiv.innerHTML = '<p>Ви не авторизовані. <a href="login.html">Увійти</a></p>';
-        logoutButton.style.display = 'none';
-        // Направляємо на сторінку логіну
-        userIcon.href = 'login.html';
-        userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`; // Дефолтна аватарка
+        userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`;
     }
 
-    // Затримка для видалення класу "hidden" після того, як всі дані завантажено
+    // Робимо сторінку видимою після завантаження аватарки
     setTimeout(function() {
-        document.body.classList.remove('hidden');
-    }, 100); // Затримка в 300 мс для більш плавного завантаження
+        document.body.classList.remove('hidden'); // Повністю відкриваємо сторінку
+    }); // Додати трохи затримки для впевненості
 });
-
     </script>
-    
 </body>
 </html>

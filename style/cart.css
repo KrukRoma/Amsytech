@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Carlito';
+  font-weight: 700;
+  background-color: #c7c8ca;
+}
+
+body.hidden {
+  visibility: hidden; /* Ховаємо сторінку перед завантаженням */
+}
+
+.header {
+  position: sticky;
+  top: 0; /* Залишаємо header на верху */
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Щоб він був зверху */
+  transition: top 0.3s ease; /* Плавний ефект при зміні */
+}
+
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.logo-text {
+  font-weight: bold;
+  font-size: 24px;
+  text-shadow: 0.1em 0.1em 0.1em #918f8f;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  background-color: #008000;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  text-decoration: none; /* Відключаємо підкреслення посилання */
+  display: inline-block; /* Зробити як блок для кращого керування стилями */
+  text-align: center;
+  font-size: 14px;
+}
+
+.nav-button:hover {
+  opacity: 0.8;
+}
+
+.utility-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.utility-icons img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer; /* Зміна курсору при наведенні */
+  transition: opacity 0.2s ease-in-out; /* Плавний перехід */
+}
+
+.utility-icons img:hover {
+  opacity: 0.8; /* Напівпрозорість при наведенні */
+}
+
+
+
+/* Footer */
+.footer {
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 30px;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+  }
+  
+  .footer-column h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .footer-column p {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .footer-column img {
+    width: 17px;
+    height: 17px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  
+  .footer-column {
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .footer-columns {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .footer-column-help h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .footer-column-help p {
+    font-size: 14px;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  
+  .footer-column-help p:hover {
+    opacity: 0.8;
+  }
+  
+  .footer-column-help {
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .footer-columns img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .footer-text {
+    font-weight: bold;
+    font-size: 24px;
+  }
+  
+  .copyright {
+    font-size: 14px;
+  }
+  
+  .payment-methods {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+  }
+  
+  .payment-methods img {
+    width: 40px;
+    height: 25px;
+  }
+  
+  /* Стилі для мінівікна профілю */
+  .user-dropdown {
+    display: none;
+    position: absolute;
+    top: 40px; /* Відстань вниз від іконки */
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 200px;
+    z-index: 100;
+  }
+  
+  .user-dropdown.show {
+    display: block;
+  }
+  
+  .dropdown-item {
+    padding: 10px;
+    text-align: left;
+    cursor: pointer;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .user-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 50%;
+    text-transform: uppercase;
+    text-align: center;  /* Додаємо, щоб буква була по центру */
+    text-decoration: none;
+  }

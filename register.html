@@ -31,10 +31,6 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      // Зберігаємо користувача в LocalStorage
-      const user = { name, surname, email };
-      LocalStorage.setUser(user);
-
       // Створюємо об'єкт для сервера
       const userData = { name, surname, email, password };
 
@@ -49,6 +45,10 @@
       .then(response => response.json())
       .then(data => {
         if (data.message === 'Реєстрація успішна!') {
+          // Зберігаємо користувача в LocalStorage після успішної реєстрації
+          const user = { name, surname, email, id: data.id };
+          LocalStorage.setUser(user);
+
           alert('Реєстрація пройшла успішно!');
           window.location.href = '/index.html';
         } else {

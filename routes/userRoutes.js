@@ -25,10 +25,19 @@ router.post('/register', async (req, res) => {
         }
 
         // Додаємо нового користувача в базу даних
-        await db.execute('INSERT INTO users (name, surname, email, password) VALUES (?, ?, ?, ?)', 
-            [name, surname, email, hashedPassword]);  // Замінили firstName на name, lastName на surname
+        const [result] = await db.execute('INSERT INTO users (name, surname, email, password) VALUES (?, ?, ?, ?)', 
+            [name, surname, email, hashedPassword]);
 
-        res.status(201).json({ message: 'Реєстрація успішна!' });
+        // Повертаємо id новоствореного користувача
+        const newUserId = result.insertId;
+
+        res.status(201).json({ 
+            message: 'Реєстрація успішна!',
+            id: newUserId,  // Повертаємо id нового користувача
+            name: name,
+            surname: surname,
+            email: email
+        });
     } catch (error) {
         console.error('Помилка при реєстрації:', error);
         res.status(500).json({ message: 'Помилка серверу' });

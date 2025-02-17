@@ -1,6 +1,7 @@
 const LocalStorage = {
   setUser: (user) => {
     const userData = {
+      id: user.id,  // Додаємо id
       name: user.name,
       surname: user.surname,
       email: user.email,

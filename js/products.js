@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const response = await fetch("http://localhost:3000/api/products");
+        if (!response.ok) {
+            throw new Error("Помилка завантаження продуктів");
+        }
         const products = await response.json();
 
         products.forEach(product => {
@@ -48,7 +51,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                             <button class="quantity-button increase">+</button>
                         </div>
 
-                        <button class="buy-button">КУПИТИ</button>
+                        <div class="actions">
+                            <button class="buy-button">КУПИТИ</button>
+                            <button class="add-to-cart" data-id="${product.id}">
+                                <img src="images/5425129490188725192.jpg" alt="Додати в кошик">
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -56,21 +64,64 @@ document.addEventListener("DOMContentLoaded", async () => {
             productList.appendChild(productCard);
         });
 
-        // Обробник збільшення та зменшення кількості
-        document.querySelectorAll(".quantity-button").forEach(button => {
-            button.addEventListener("click", (e) => {
-                const input = e.target.closest(".quantity-selector").querySelector(".quantity-input");
-                let value = parseInt(input.value);
-                
-                if (e.target.classList.contains("increase")) {
-                    input.value = value + 1;
-                } else if (e.target.classList.contains("decrease") && value > 1) {
-                    input.value = value - 1;
+        // Додавання товару в кошик
+        document.addEventListener("click", async (event) => {
+            const button = event.target.closest(".add-to-cart");
+            if (!button) return;
+
+            const productId = button.dataset.id;
+            const quantityInput = button.closest(".product-purchase").querySelector(".quantity-input");
+            const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+
+            // Отримання користувача з localStorage
+            const user = JSON.parse(localStorage.getItem("amsytech_auth_user"));
+            if (!user) {
+                alert("Ви не авторизовані. Будь ласка, увійдіть у свій акаунт.");
+                return;
+            }
+
+            const requestData = {
+                user_id: user.id,
+                product_id: productId,
+                quantity: quantity
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/api/cart/add", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                } else {
+                    throw new Error(data.error || "Не вдалося додати товар у кошик.");
                 }
-            });
+            } catch (error) {
+                console.error("Помилка додавання:", error);
+                alert(error.message);
+            }
+        });
+
+        // Обробка кнопок +/- для зміни кількості товару
+        document.addEventListener("click", (event) => {
+            const button = event.target.closest(".quantity-button");
+            if (!button) return;
+
+            const input = button.closest(".quantity-selector").querySelector(".quantity-input");
+            let value = parseInt(input.value);
+
+            if (button.classList.contains("increase")) {
+                input.value = value + 1;
+            } else if (button.classList.contains("decrease") && value > 1) {
+                input.value = value - 1;
+            }
         });
 
     } catch (error) {
         console.error("Помилка завантаження продуктів:", error);
+        alert("Не вдалося завантажити продукти. Спробуйте ще раз пізніше.");
     }
 });

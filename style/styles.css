@@ -276,6 +276,30 @@ body.hidden {
   background-color: #00a400;
 }
 
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.add-to-cart {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.add-to-cart img {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s;
+}
+
+.add-to-cart:hover img {
+  transform: scale(1.1);
+}
+
+
 /* Footer */
 .footer {
   background: white;

@@ -27,9 +27,8 @@
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-
       // Відправляємо запит до сервера
-      fetch('http://localhost:3000/api/users/login', {
+      fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -39,11 +38,10 @@
       .then(response => response.json())
       .then(data => {
         if (data.message === 'Успішно залогінено!') {
-          
           // Зберігаємо дані користувача в LocalStorage
-          const user = { name: data.name, surname: data.surname, email: data.email };
-          LocalStorage.setUser(user);
-
+          const user = { id: data.id, name: data.name, surname: data.surname, email: data.email };
+          LocalStorage.setUser(user);  // Передбачаючи, що у LocalStorage є метод setUser для збереження даних
+  
           alert('Логін успішний!');
           window.location.href = '/index.html'; // Перенаправлення на домашню сторінку після логіну
         } else {
@@ -56,5 +54,6 @@
       });
     });
   </script>
+  
 </body>
 </html>
