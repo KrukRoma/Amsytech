@@ -44,38 +44,37 @@ exports.updateCartItem = async (req, res) => {
 
 exports.deleteCartItem = async (req, res) => {
     try {
-        const { cartId } = req.params; // cartId отримується з параметрів
-        const { user_id } = req.body; // user_id отримується з тіла запиту
+        const { cartId } = req.params;
+        const { user_id } = req.body;
 
         if (!cartId || !user_id) {
             return res.status(400).json({ error: "Всі поля обов'язкові!" });
         }
 
-        // Логування для перевірки отриманих значень
-        console.log("cart_id для видалення:", item.cart_id);
-        console.log("Отримано DELETE-запит:");
-        console.log("cartId (ID запису в кошику):", cartId);
-        console.log("user_id:", user_id);
+        const [existingCartItem] = await pool.query(
+            "SELECT * FROM cart WHERE id = ? AND user_id = ?",
+            [cartId, user_id]
+        );
 
-        // Шукаємо запис у кошику по cartId та user_id
-        const result = await pool.query(
+        if (existingCartItem.length === 0) {
+            return res.status(404).json({ error: "Товар не знайдено в кошику" });
+        }
+
+        const [result] = await pool.query(
             "DELETE FROM cart WHERE id = ? AND user_id = ?",
             [cartId, user_id]
         );
 
-        if (result[0].affectedRows === 0) {
-            console.log("Товар не знайдено в базі для цього користувача");
-            return res.status(404).json({ error: "Товар не знайдено в кошику для цього користувача" });
+        if (result.affectedRows === 0) {
+            return res.status(500).json({ error: "Не вдалося видалити товар" });
         }
 
-        console.log("Товар успішно видалено з кошика");
         res.json({ success: true, message: "Товар видалено з кошика" });
     } catch (error) {
         console.error("Помилка видалення:", error);
         res.status(500).json({ error: "Помилка видалення" });
     }
 };
-
 
 exports.getCartItems = async (req, res) => {
     try {
