@@ -1,3 +1,4 @@
+require('dotenv').config(); // Підключення .env
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const db = require('../db'); // Підключення до бази
@@ -25,13 +26,14 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Невірний пароль' });
         }
 
-        // Додаємо id користувача в відповідь
+        // Повертаємо відповідь з додатковою інформацією
         res.status(200).json({
             message: 'Успішно залогінено!',
             id: user.id,         // Додаємо id
             email: user.email,
             name: user.name,
-            surname: user.surname
+            surname: user.surname,
+            isAdmin: user.role === 'admin' // Перевірка, чи є роль admin
         });
     } catch (error) {
         console.error('Помилка при логіні:', error);

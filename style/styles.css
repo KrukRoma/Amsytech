@@ -439,6 +439,21 @@ body.hidden {
   text-decoration: none;
 }
 
+.userIconContainer {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50%;
+  text-transform: uppercase;
+  text-align: center;  /* Додаємо, щоб буква була по центру */
+  text-decoration: none;
+}
 
 /* Responsive styles */
 /* Responsive styles */

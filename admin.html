@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMSYTECH</title>
+    <title>Адмін Панель</title>
     <link rel="shortcut icon" href="/images/AmsytechLogoImage.svg">
     <link rel="stylesheet" href="/style/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="/js/config.js"></script>
     <script src="/js/localStorage.js"></script>
     <script src="/js/script.js"></script>
-    <script src="/js/products.js"></script>
 
 </head>
 <body>
@@ -33,18 +32,26 @@
                 <img src="images\5425129490188725190.jpg" alt="Language">
                 <a href="cart.html">
                     <img src="images/5425129490188725192.jpg" alt="Cart">
-                </a>
-                <a href="login.html" id="user-icon" class="user-icon"></a>
+                </a>                
+                <div id="user-icon" class="userIconContainer">
+                    <img src="images\5425129490188725198.jpg" alt="User" id="user-icon">
+                </div>
             </div>
         </div>
     </header>
 
     <div class="main-container">
         <div class="main-content">
-            <h1 class="page-title">AMSYTECH</h1>
-            <p class="page-subtitle">Наші роботи</p>
-        
-            <div id="product-list" class="grid-container"></div>
+            <h1>Адмін Панель</h1>
+            
+            <!-- Кнопка повернення на головну -->
+            <button id="backToHomeButton">Повернутися на головну</button>
+            
+            <div id="adminContent">
+                <!-- Тут буде основний функціонал для адміна, наприклад, додавання/редагування товарів -->
+                <h2>Управління товарами</h2>
+                <!-- Товари, які можна редагувати або додавати -->
+            </div>
         </div>
     </div>
 
@@ -76,13 +83,13 @@
 
             <div class="footer-column">
                 <h3>ЯК ЗВ'ЯЗАТИСЯ</h3>
-                <img src="images/5425129490188725191.jpg" alt="Mail"
+                <img src="images/5425129490188725191.jpg" alt="Mail">
                 <p>info@ams.org.ua</p>
-                <img src="images/5425129490188725197.jpg" alt="Kyivstar"
+                <img src="images/5425129490188725197.jpg" alt="Kyivstar">
                 <p>(097) 599-74-65</p>
-                <img src="images/5425129490188725193.jpg" alt="Vodafone"
+                <img src="images/5425129490188725193.jpg" alt="Vodafone">
                 <p>(050) 770-54-91</p>
-                    <h3>ПРИЙМАЄМО ДО ОПЛАТИ</h3>
+                <h3>ПРИЙМАЄМО ДО ОПЛАТИ</h3>
                 <div class="payment-methods">
                     <img src="images\5425129490188725195.jpg" alt="Mastercard">
                     <img src="images\5425129490188725194.jpg" alt="Visa">
@@ -92,39 +99,42 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const user = LocalStorage.getUser();
-    const userInfoDiv = document.getElementById('userInfo');
-    const logoutButton = document.getElementById('logoutButton');
+    <script>        
+        document.addEventListener('DOMContentLoaded', function () {
+    const user = JSON.parse(localStorage.getItem('amsytech_auth_user'));
     const userIcon = document.getElementById('user-icon');
 
-    // Перевірка наявності користувача в LocalStorage
-    if (user) {
-        // Якщо користувач є в LocalStorage, виводимо його інформацію
-        userInfoDiv.innerHTML = `<p>Вітаємо, ${user.name} ${user.surname}!</p>
-                                 <p>Email: ${user.email}</p>
-                                 <p>Сесія дійсна до: ${new Date(user.expiration).toLocaleString()}</p>`;
-        logoutButton.style.display = 'block';
-        // Направляємо користувача на сторінку акаунта
-        userIcon.href = 'account.html';
-        userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`; // Перша буква імені користувача
+    if (user && user.name) {
+        userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`;
     } else {
-        // Якщо користувача немає, пропонуємо зайти
-        userInfoDiv.innerHTML = '<p>Ви не авторизовані. <a href="login.html">Увійти</a></p>';
-        logoutButton.style.display = 'none';
-        // Направляємо на сторінку логіну
-        userIcon.href = 'login.html';
-        userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`; // Дефолтна аватарка
+        userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`;
     }
 
-    // Затримка для видалення класу "hidden" після того, як всі дані завантажено
+    // Робимо сторінку видимою після завантаження аватарки
     setTimeout(function() {
         document.body.classList.remove('hidden');
-    }, 100); // Затримка в 300 мс для більш плавного завантаження
+    }, 100);
+
+    // Перевіряємо, чи користувач залогінений
+    if (LocalStorage.isLoggedIn()) {
+        const user = LocalStorage.getUser();
+
+        // Якщо це адмін, дозволяємо доступ до адмін-панелі
+        if (user.role === 'admin') {
+            document.getElementById('backToHomeButton').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+            console.log('Адміністратор: доступ до адмін-панелі');
+        } else {
+            alert('У вас немає прав доступу до адмін-панелі');
+            window.location.href = 'index.html';
+        }
+    } else {
+        alert('Ви не залогінені. Перенаправляємо на головну сторінку...');
+        window.location.href = 'index.html';
+    }
 });
 
     </script>
-    
 </body>
 </html>
