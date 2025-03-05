@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Адмін Панель</title>
+    <title>Редагування продукту</title>
     <link rel="shortcut icon" href="/images/AmsytechLogoImage.svg">
     <link rel="stylesheet" href="/style/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -41,43 +41,32 @@
 
     <div class="main-container">
         <div class="main-content">
-            <h1>Адмін Панель</h1>
+            <h1>Редагування продукту</h1>
             
-            <!-- Кнопка повернення на головну -->
-            <button id="backToHomeButton">Повернутися на головну</button>
-            
-            <div id="adminContent">
-                <!-- Тут буде основний функціонал для адміна, наприклад, додавання/редагування товарів -->
-                <h2>Управління товарами</h2>
-                <!-- Кнопка для додавання продукту -->
-                <button id="showAddProductFormButton">Додати продукт</button>
+            <form id="editProductForm" enctype="multipart/form-data">
+                <label for="productName">Назва продукту:</label>
+                <input type="text" id="productName" name="productName" required>
                 
-                <!-- Форма додавання продукту, яка буде показана після натискання кнопки -->
-                <form id="addProductForm" enctype="multipart/form-data" style="display: none;">
-                    <label for="productName">Назва продукту:</label>
-                    <input type="text" id="productName" name="productName" required>
-                    
-                    <label for="productSubtitle">Підзаголовок продукту:</label>
-                    <input type="text" id="productSubtitle" name="productSubtitle">
-                    
-                    <label for="productManufacturer">Виробник продукту:</label>
-                    <input type="text" id="productManufacturer" name="productManufacturer">
-                    
-                    <label for="productPrice">Ціна продукту:</label>
-                    <input type="number" id="productPrice" name="productPrice" required>
-                    
-                    <label for="productDescription">Опис продукту:</label>
-                    <textarea id="productDescription" name="productDescription" required></textarea>
-                    
-                    <label for="productDocumentation">Посилання на документацію:</label>
-                    <input type="url" id="productDocumentation" name="productDocumentation">
-                    
-                    <label for="productImage">Зображення продукту (файл):</label>
-                    <input type="file" id="productImage" name="productImage" required>
-                    
-                    <button type="submit">Додати продукт</button>
-                </form>
-            </div>
+                <label for="productSubtitle">Підзаголовок продукту:</label>
+                <input type="text" id="productSubtitle" name="productSubtitle">
+                
+                <label for="productManufacturer">Виробник продукту:</label>
+                <input type="text" id="productManufacturer" name="productManufacturer">
+                
+                <label for="productPrice">Ціна продукту:</label>
+                <input type="number" id="productPrice" name="productPrice" required>
+                
+                <label for="productDescription">Опис продукту:</label>
+                <textarea id="productDescription" name="productDescription" required></textarea>
+                
+                <label for="productDocumentation">Посилання на документацію:</label>
+                <input type="url" id="productDocumentation" name="productDocumentation">
+                
+                <label for="productImage">Зображення продукту (файл):</label>
+                <input type="file" id="productImage" name="productImage">
+                
+                <button type="submit">Зберегти зміни</button>
+            </form>
         </div>
     </div>
 
@@ -125,50 +114,69 @@
         </div>
     </footer>
 
-    <script>        
-        document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
             const user = JSON.parse(localStorage.getItem('amsytech_auth_user'));
             const userIcon = document.getElementById('user-icon');
-
+    
             if (user && user.name) {
                 userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`;
             } else {
                 userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`;
             }
-
+    
             // Робимо сторінку видимою після завантаження аватарки
             setTimeout(function() {
                 document.body.classList.remove('hidden');
             }, 100);
-
+    
             // Перевіряємо, чи користувач залогінений
             if (LocalStorage.isLoggedIn()) {
                 const user = LocalStorage.getUser();
-
-                // Якщо це адмін, дозволяємо доступ до адмін-панелі
-                if (user.role === 'admin') {
-                    document.getElementById('backToHomeButton').addEventListener('click', function() {
-                        window.location.href = 'index.html';
-                    });
-                    console.log('Адміністратор: доступ до адмін-панелі');
-                } else {
-                    alert('У вас немає прав доступу до адмін-панелі');
+    
+                if (user.role !== 'admin') {
+                    alert('У вас немає прав доступу до цієї сторінки');
                     window.location.href = 'index.html';
                 }
             } else {
                 alert('Ви не залогінені. Перенаправляємо на головну сторінку...');
                 window.location.href = 'index.html';
             }
-
-            // Показати форму додавання продукту
-            document.getElementById('showAddProductFormButton').addEventListener('click', function() {
-                document.getElementById('addProductForm').style.display = 'block';
-            });
-
-            // Обробка форми додавання продукту
-            document.getElementById('addProductForm').addEventListener('submit', async function(event) {
+    
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+    
+            if (!productId) {
+                alert('Продукт не знайдено');
+                window.location.href = 'admin.html';
+                return;
+            }
+    
+            let currentPhotoUrl = '';
+    
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/${productId}`);
+                if (!response.ok) {
+                    throw new Error('Помилка завантаження продукту');
+                }
+                const product = await response.json();
+    
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productSubtitle').value = product.subtitle;
+                document.getElementById('productManufacturer').value = product.manufacturer;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productDocumentation').value = product.documentation_url;
+                currentPhotoUrl = product.photo_url; // Збереження поточного шляху до фото
+            } catch (error) {
+                console.error('Помилка завантаження продукту:', error);
+                alert('Не вдалося завантажити продукт. Спробуйте ще раз пізніше.');
+                window.location.href = 'admin.html';
+            }
+    
+            document.getElementById('editProductForm').addEventListener('submit', async function(event) {
                 event.preventDefault();
-
+    
                 const productName = document.getElementById('productName').value;
                 const productSubtitle = document.getElementById('productSubtitle').value;
                 const productManufacturer = document.getElementById('productManufacturer').value;
@@ -176,13 +184,7 @@
                 const productDescription = document.getElementById('productDescription').value;
                 const productDocumentation = document.getElementById('productDocumentation').value;
                 const productImage = document.getElementById('productImage').files[0];
-
-                const user = JSON.parse(localStorage.getItem('amsytech_auth_user'));
-                if (!user) {
-                    alert('Ви не авторизовані. Будь ласка, увійдіть у свій акаунт.');
-                    return;
-                }
-
+    
                 const formData = new FormData();
                 formData.append('name', productName);
                 formData.append('subtitle', productSubtitle);
@@ -190,26 +192,27 @@
                 formData.append('price', productPrice);
                 formData.append('description', productDescription);
                 formData.append('documentation_url', productDocumentation);
-                formData.append('photo', productImage);
-                formData.append('user_id', user.id);
-
+                if (productImage) {
+                    formData.append('photo', productImage);
+                } else {
+                    formData.append('photo_url', currentPhotoUrl); // Додавання поточного шляху до фото, якщо нове фото не вибрано
+                }
+    
                 try {
-                    const response = await fetch('http://localhost:3000/api/products', {
-                        method: 'POST',
+                    const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+                        method: 'PUT',
                         body: formData
                     });
-
+    
                     const data = await response.json();
                     if (response.ok) {
-                        alert('Продукт успішно доданий!');
-                        document.getElementById('addProductForm').reset();
-                        document.getElementById('addProductForm').style.display = 'none';
+                        alert('Продукт успішно оновлений!');
+                        window.location.href = 'index.html';
                     } else {
-                        throw new Error(data.error || 'Не вдалося додати продукт.');
+                        throw new Error(data.error || 'Не вдалося оновити продукт.');
                     }
                 } catch (error) {
-                    console.error('Помилка додавання продукту:', error);
-                    alert(error.message);
+                    console.error('Помилка оновлення продукту:', error);
                 }
             });
         });

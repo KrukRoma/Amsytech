@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         const products = await response.json();
 
+        // Отримання користувача з localStorage
+        const user = JSON.parse(localStorage.getItem("amsytech_auth_user"));
+
         products.forEach(product => {
             const productCard = document.createElement("div");
             productCard.classList.add("grid-item");
@@ -56,6 +59,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                             <button class="add-to-cart" data-id="${product.id}">
                                 <img src="images/5425129490188725192.jpg" alt="Додати в кошик">
                             </button>
+                            ${user && user.role === 'admin' ? `
+                            <button class="edit-product" data-id="${product.id}">Редагувати</button>
+                            <button class="delete-product" data-id="${product.id}">Видалити</button>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -73,8 +80,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const quantityInput = button.closest(".product-purchase").querySelector(".quantity-input");
             const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
 
-            // Отримання користувача з localStorage
-            const user = JSON.parse(localStorage.getItem("amsytech_auth_user"));
             if (!user) {
                 alert("Ви не авторизовані. Будь ласка, увійдіть у свій акаунт.");
                 return;
@@ -117,6 +122,40 @@ document.addEventListener("DOMContentLoaded", async () => {
                 input.value = value + 1;
             } else if (button.classList.contains("decrease") && value > 1) {
                 input.value = value - 1;
+            }
+        });
+
+        // Обробка редагування продукту
+        document.addEventListener("click", (event) => {
+            const button = event.target.closest(".edit-product");
+            if (!button) return;
+
+            const productId = button.dataset.id;
+            window.location.href = `editProduct.html?id=${productId}`;
+        });
+
+        // Обробка видалення продукту
+        document.addEventListener("click", async (event) => {
+            const button = event.target.closest(".delete-product");
+            if (!button) return;
+
+            const productId = button.dataset.id;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+                    method: "DELETE"
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                    button.closest(".product-card").remove();
+                } else {
+                    throw new Error(data.error || "Не вдалося видалити продукт.");
+                }
+            } catch (error) {
+                console.error("Помилка видалення продукту:", error);
+                alert(error.message);
             }
         });
 
