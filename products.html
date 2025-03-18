@@ -28,7 +28,8 @@
                 <img src="images/5425129490188725190.jpg" alt="Language">
                 <a href="cart.html">
                     <img src="images/5425129490188725192.jpg" alt="Cart">
-                </a>                <a href="login.html" id="user-icon" class="user-icon">
+                </a>                
+                <a href="login.html" id="user-icon" class="user-icon">
                     <!-- Аватарка буде завантажена динамічно -->
                 </a>
             </div>
@@ -108,7 +109,7 @@
                 <p>(097) 599-74-65</p>
                 <img src="images/5425129490188725193.jpg" alt="Vodafone">
                 <p>(050) 770-54-91</p>
-                    <h3>ПРИЙМАЄМО ДО ОПЛАТИ</h3>
+                <h3>ПРИЙМАЄМО ДО ОПЛАТИ</h3>
                 <div class="payment-methods">
                     <img src="images/5425129490188725195.jpg" alt="Mastercard">
                     <img src="images/5425129490188725194.jpg" alt="Visa">
@@ -120,21 +121,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const user = JSON.parse(localStorage.getItem('amsytech_auth_user'));
-    const userIcon = document.getElementById('user-icon');
+            const user = JSON.parse(localStorage.getItem('amsytech_auth_user'));
+            const userIcon = document.getElementById('user-icon');
 
-    if (user && user.name) {
-        userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`;
-    } else {
-        userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`;
-    }
+            if (user && user.name) {
+                userIcon.innerHTML = `<div class="user-icon">${user.name.charAt(0)}</div>`;
+            } else {
+                userIcon.innerHTML = `<img src="images/5425129490188725198.jpg" alt="User" id="defaultUserIcon">`;
+            }
 
-    // Робимо сторінку видимою після завантаження аватарки
-    setTimeout(function() {
-        document.body.classList.remove('hidden'); // Повністю відкриваємо сторінку
-    }, 100); // Додати трохи затримки для впевненості
-});
-
+            // Робимо сторінку видимою після завантаження аватарки
+            setTimeout(function() {
+                document.body.classList.remove('hidden'); // Повністю відкриваємо сторінку
+            }, 100); // Додати трохи затримки для впевненості
+        });
     </script>
 </body>
 </html>
