@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes'); // Підключаємо кошик
 const passResetRoutes = require('./routes/passResetRoutes');
+const orderRoutes = require('./routes/orderRoutes'); // Підключаємо маршрути замовлень
 const path = require('path');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes); // Додаємо маршрут для кошика
 app.use('/api/password-reset', passResetRoutes);
+app.use('/api/orders', orderRoutes); // Додаємо маршрути замовлень
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

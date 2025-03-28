@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         </div>
 
                         <div class="actions">
-                            <button class="buy-button">КУПИТИ</button>
+                            <button class="buy-button" data-id="${product.id}">КУПИТИ</button>
                             <button class="add-to-cart" data-id="${product.id}">
                                 <img src="images/5425129490188725192.jpg" alt="Додати в кошик">
                             </button>
@@ -157,6 +157,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.error("Помилка видалення продукту:", error);
                 alert(error.message);
             }
+        });
+
+        // Обробка переходу на order.html при натисканні кнопки "Купити"
+        document.addEventListener("click", (event) => {
+            const button = event.target.closest(".buy-button");
+            if (!button) return;
+
+            const productId = button.dataset.id;
+            const quantityInput = button.closest(".product-purchase").querySelector(".quantity-input");
+            const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+            window.location.href = `order.html?id=${productId}&quantity=${quantity}`;
         });
 
     } catch (error) {
