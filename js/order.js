@@ -37,8 +37,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Не вдалося завантажити продукт. Спробуйте ще раз пізніше.");
     }
 
+    await loadRegions();
+    await loadPostalServices();
+
     document.getElementById("order-form").addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        // Перевірка, чи всі поля форми заповнені
+        const formFields = [
+            "user-firstname",
+            "user-lastname",
+            "user-email",
+            "user-phone",
+            "region",
+            "district",
+            "post_office",
+            "department"
+        ];
+
+        let allFieldsFilled = true;
+        formFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!field.value) {
+                console.error(`Field ${fieldId} is empty`);
+                field.style.borderColor = "red";
+                allFieldsFilled = false;
+            } else {
+                field.style.borderColor = "";
+            }
+        });
+
+        if (!allFieldsFilled) {
+            alert("Будь ласка, заповніть всі обов'язкові поля.");
+            return;
+        }
 
         const orderData = {
             product_id: productId,
@@ -49,8 +81,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             user_lastname: document.getElementById("user-lastname").value,
             user_email: document.getElementById("user-email").value,
             user_phone: document.getElementById("user-phone").value,
-            user_city: document.getElementById("user-city").value
+            region_id: document.getElementById("region").value,
+            district_id: document.getElementById("district").value,
+            post_office_id: document.getElementById("post_office").value,
+            department: document.getElementById("department").value
         };
+
+        // Виведення даних в консоль перед відправкою
+        console.log("Дані замовлення:", orderData);
 
         try {
             const response = await fetch("http://localhost:3000/api/orders", {
@@ -71,4 +109,49 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert(error.message);
         }
     });
+
+    document.getElementById("region").addEventListener("change", async (event) => {
+        const regionId = event.target.value;
+        await loadDistricts(regionId); // Завантажуємо райони для вибраної області
+    });
 });
+
+async function loadRegions() {
+    const response = await fetch("http://localhost:3000/api/regions");
+    const regions = await response.json();
+    const regionSelect = document.getElementById("region");
+
+    regions.forEach(region => {
+        const option = document.createElement("option");
+        option.value = region.id;
+        option.textContent = region.name;
+        regionSelect.appendChild(option);
+    });
+}
+
+async function loadDistricts(regionId) {
+    const response = await fetch(`http://localhost:3000/api/regions/${regionId}/districts`);
+    const districts = await response.json();
+    const districtSelect = document.getElementById("district"); // Змінили на districtSelect
+
+    districtSelect.innerHTML = ""; // Очищаємо попередні значення
+    districts.forEach(district => {
+        const option = document.createElement("option");
+        option.value = district.id;
+        option.textContent = district.name;
+        districtSelect.appendChild(option);
+    });
+}
+
+async function loadPostalServices() {
+    const response = await fetch("http://localhost:3000/api/postal_services");
+    const postalServices = await response.json();
+    const postOfficeSelect = document.getElementById("post_office");
+
+    postalServices.forEach(service => {
+        const option = document.createElement("option");
+        option.value = service.id;
+        option.textContent = service.name;
+        postOfficeSelect.appendChild(option);
+    });
+}
