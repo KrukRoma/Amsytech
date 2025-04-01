@@ -43,38 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("order-form").addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        // Перевірка, чи всі поля форми заповнені
-        const formFields = [
-            "user-firstname",
-            "user-lastname",
-            "user-email",
-            "user-phone",
-            "region",
-            "district",
-            "post_office",
-            "department",
-            "card-number",
-            "expiry-date",
-            "cvv"
-        ];
-
-        let allFieldsFilled = true;
-        formFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (!field.value) {
-                console.error(`Field ${fieldId} is empty`);
-                field.style.borderColor = "red";
-                allFieldsFilled = false;
-            } else {
-                field.style.borderColor = "";
-            }
-        });
-
-        if (!allFieldsFilled) {
-            alert("Будь ласка, заповніть всі обов'язкові поля.");
-            return;
-        }
-
         const orderData = {
             product_id: productId,
             product_name: productName.textContent,
@@ -87,39 +55,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             region_id: document.getElementById("region").value,
             district_id: document.getElementById("district").value,
             post_office_id: document.getElementById("post_office").value,
-            department: document.getElementById("department").value,
-            card_number: document.getElementById("card-number").value,
-            expiry_date: document.getElementById("expiry-date").value,
-            cvv: document.getElementById("cvv").value
+            department: document.getElementById("department").value
         };
 
-        // Виведення даних в консоль перед відправкою
         console.log("Дані замовлення:", orderData);
 
         try {
-            // Відправка даних на сервер для обробки платежу
-            const response = await fetch("/api/process_payment", {
+            const response = await fetch("http://localhost:3000/api/orders", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(orderData)
             });
 
-            console.log('Payment response status:', response.status); // Додавання логування
-            if (response.status === 405) {
-                console.error("HTTP метод не дозволений для цього шляху");
-                alert("HTTP метод не дозволений для цього шляху");
-                return;
-            }
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Не вдалося оформити замовлення.");
-            }
-
             const data = await response.json();
-            alert("Замовлення успішно оформлене!");
-            window.location.href = "index.html";
-
+            if (response.ok) {
+                alert("Замовлення успішно оформлене!");
+                window.location.href = "index.html";
+            } else {
+                throw new Error(data.error || "Не вдалося оформити замовлення.");
+            }
         } catch (error) {
             console.error("Помилка оформлення замовлення:", error);
             alert(error.message);
@@ -128,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("region").addEventListener("change", async (event) => {
         const regionId = event.target.value;
-        await loadDistricts(regionId); // Завантажуємо райони для вибраної області
+        await loadDistricts(regionId); 
     });
 });
 
@@ -148,9 +102,9 @@ async function loadRegions() {
 async function loadDistricts(regionId) {
     const response = await fetch(`http://localhost:3000/api/regions/${regionId}/districts`);
     const districts = await response.json();
-    const districtSelect = document.getElementById("district"); // Змінили на districtSelect
+    const districtSelect = document.getElementById("district"); 
 
-    districtSelect.innerHTML = ""; // Очищаємо попередні значення
+    districtSelect.innerHTML = ""; 
     districts.forEach(district => {
         const option = document.createElement("option");
         option.value = district.id;
