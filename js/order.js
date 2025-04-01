@@ -52,7 +52,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             "region",
             "district",
             "post_office",
-            "department"
+            "department",
+            "card-number",
+            "expiry-date",
+            "cvv"
         ];
 
         let allFieldsFilled = true;
@@ -84,26 +87,39 @@ document.addEventListener("DOMContentLoaded", async () => {
             region_id: document.getElementById("region").value,
             district_id: document.getElementById("district").value,
             post_office_id: document.getElementById("post_office").value,
-            department: document.getElementById("department").value
+            department: document.getElementById("department").value,
+            card_number: document.getElementById("card-number").value,
+            expiry_date: document.getElementById("expiry-date").value,
+            cvv: document.getElementById("cvv").value
         };
 
         // Виведення даних в консоль перед відправкою
         console.log("Дані замовлення:", orderData);
 
         try {
-            const response = await fetch("http://localhost:3000/api/orders", {
+            // Відправка даних на сервер для обробки платежу
+            const response = await fetch("/api/process_payment", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(orderData)
             });
 
-            const data = await response.json();
-            if (response.ok) {
-                alert("Замовлення успішно оформлене!");
-                window.location.href = "index.html";
-            } else {
-                throw new Error(data.error || "Не вдалося оформити замовлення.");
+            console.log('Payment response status:', response.status); // Додавання логування
+            if (response.status === 405) {
+                console.error("HTTP метод не дозволений для цього шляху");
+                alert("HTTP метод не дозволений для цього шляху");
+                return;
             }
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Не вдалося оформити замовлення.");
+            }
+
+            const data = await response.json();
+            alert("Замовлення успішно оформлене!");
+            window.location.href = "index.html";
+
         } catch (error) {
             console.error("Помилка оформлення замовлення:", error);
             alert(error.message);
